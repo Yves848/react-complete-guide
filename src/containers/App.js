@@ -1,29 +1,42 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import Aux from '../hoc/Auxi';
+import withClass from '../hoc/withClass';
+class App extends PureComponent {
+  constructor(props) {
+    super(props)
+    console.log('[App.js] Inside Constructor',props)
+    this.state = {
+      persons: [
+        {
+          id: 1,
+          name: 'Max',
+          age: 28,
+        },
+        {
+          id: 2,
+          name: 'Manu',
+          age: 29,
+        },
+        {
+          id: 3,
+          name: 'Stephanie',
+          age: 26,
+        },
+      ],
+      showPersons: false,
+    };
+  }
 
-class App extends Component {
-  state = {
-    persons: [
-      {
-        id: 1,
-        name: 'Max',
-        age: 28,
-      },
-      {
-        id: 2,
-        name: 'Manu',
-        age: 29,
-      },
-      {
-        id: 3,
-        name: 'Stephanie',
-        age: 26,
-      },
-    ],
-    showPersons: false,
-  };
+  componentWillMount() {
+    console.log('[App.js] Inside componentWillMount')
+  }
+
+  componentDidMount() {
+    console.log('[App.js] Inside componentDidMount')
+  }
 
   nameChangedHandler = (event, id) => {
     const personIndex = this.state.persons.findIndex(p => {
@@ -60,6 +73,7 @@ class App extends Component {
   };
 
   render() {
+    console.log('[App.js] Inside Render')
     let persons = null;
 
     if (this.state.showPersons) {
@@ -73,16 +87,18 @@ class App extends Component {
     }
 
     return (
-      <div className={classes.App}>
+      <Aux>
+        <button onClick={()=> {this.setState({showPersons: true})}}>Show Persons</button>
         <Cockpit
+          appTitle={this.props.title}
           showPersons={this.state.showPersons}
           persons={this.state.persons}
           clicked={this.togglePersonsHandler}
         />
         {persons}
-      </div>
+      </Aux>
     );
   }
 }
 
-export default App;
+export default withClass(App, classes.App);
